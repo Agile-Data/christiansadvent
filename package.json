@@ -12,6 +12,7 @@
     "test:ui": "playwright test"
   },
   "dependencies": {
+    "@agile-data/advent": "0.1.4-rc.1",
     "@auth0/nextjs-auth0": "4.29.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -19,8 +20,7 @@
     "@mui/material": "^9.4.0",
     "next": "16.3.5",
     "react": "19.3.0",
-    "react-dom": "19.3.0",
-    "@agile-data/advent": "file:../../agile-ui/modules/advent"
+    "react-dom": "19.3.0"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
