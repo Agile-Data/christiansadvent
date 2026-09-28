@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "generator": "built-in image_gen",
+  "characters": [
+    "family-11",
+    "family-08"
+  ],
+  "names": [
+    "Bekah",
+    "Melissa"
+  ],
+  "identityReference": "art/characters/v3/family-cast-v3.png",
+  "styleReference": "art/characters/v1/advent-crafting-scene-v1.png",
+  "sha256": "2ad007cf7cf40f0fe44bfe293a9e63eb659072ad38a51cf4581a8f4676696ab8",
+  "description": "Bekah and Melissa assembling a paper gingerbread stable with Mary, Joseph, Jesus in the manger, three wise men, two shepherds, an angel, donkey, ox, camel, two sheep and a lamb.",
+  "publicationStatus": "local draft"
+}

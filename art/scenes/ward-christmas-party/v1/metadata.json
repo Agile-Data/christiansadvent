@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "generator": "built-in image_gen",
+  "names": [
+    "Mike",
+    "Lani",
+    "Maddie",
+    "Mia",
+    "Christian"
+  ],
+  "publicationStatus": "local draft",
+  "references": [
+    "art/characters/v3/family-cast-v3.png",
+    "art/characters/v1/mike-christian-turnaround-v1.png"
+  ]
+}

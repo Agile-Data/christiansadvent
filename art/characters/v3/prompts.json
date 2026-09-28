@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "generator": "built-in image_gen",
+  "reference": "../v2/family-cast-v2.png",
+  "prompt": "Use case: identity-preserve. Edit this existing 12-panel family character reference sheet. Change ONLY portraits 02 and 03, the second and third panels of the top row. In portrait 02, Andrew: remove his baseball cap completely and give him natural short BLONDE hair, lightly side-swept; preserve his clean-shaven face, smile, age, build and light gray shirt. In portrait 03, Mikey: remove his baseball cap completely and give him natural short BROWN hair, similar brown color to John's hair in panel 06; preserve Mikey's existing dark beard and mustache, round face, smile, age, stocky build and charcoal gray shirt. These are the default hat-free versions; no new headwear. Preserve ALL other portraits, including hat-free John in panel 06, exactly as supplied. Preserve all clothing, facial identities, grid layout, borders, number labels 01–12, white background, drawing style, original dimensions and aspect ratio. Do not add names or change other hair colors."
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+  <head>
+    {%- auth0:head -%}
+    {% if application.id == 'aUlUWtIctnNhZNlbnQF5Mo5wsgJwgagd' %}
+    <title>Sign in | Christian's Advent</title>
+    <link rel="icon" type="image/png" href="https://familiator-public-assets-580848391496-us-east-1.s3.us-east-1.amazonaws.com/branding/advent-icon.png">
+    <style>
+      ._use-custom-prompt-logo #custom-prompt-logo {
+        background-image: url('https://familiator-public-assets-580848391496-us-east-1.s3.us-east-1.amazonaws.com/branding/advent-icon.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 80px;
+        height: 80px;
+      }
+    </style>
+    {% else %}
+    <title>{{ application.name | escape }}</title>
+    {% endif %}
+  </head>
+  <body class="_widget-auto-layout _use-custom-prompt-logo">
+    {%- auth0:widget -%}
+  </body>
+</html>

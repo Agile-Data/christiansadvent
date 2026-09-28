@@ -1,0 +1,25 @@
+"use client";
+import {useEffect,useState} from "react";
+type API=<T>(path:string,method?:string,body?:unknown)=>Promise<T>;
+type Person={id:string;name:string;email:string;canEdit:boolean;status:string;expiresAt:string};
+type Member={id:string;name:string;role:string};
+export default function CalendarPeople({calendarId,api,onClose}:{calendarId:string;api:API;onClose:()=>void}) {
+  const [people,setPeople]=useState<Person[]>([]),[members,setMembers]=useState<Member[]>([]),[busy,setBusy]=useState(true),[loaded,setLoaded]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState(""),[link,setLink]=useState("");
+  const base=`/${calendarId}`;
+  async function load(){const [p,m]=await Promise.all([api<Person[]>(`${base}/people`),api<Member[]>(`${base}/members`)]);setPeople(p);setMembers(m);setLoaded(true);}
+  useEffect(()=>{let cancelled=false;Promise.all([api<Person[]>(`${base}/people`),api<Member[]>(`${base}/members`)]).then(([p,m])=>{if(!cancelled){setPeople(p);setMembers(m);setLoaded(true);}}).catch(e=>{if(!cancelled)setError(e.message);}).finally(()=>{if(!cancelled)setBusy(false);});return()=>{cancelled=true;};},[calendarId]);
+  async function run(fn:()=>Promise<void>){setBusy(true);setError("");setNotice("");try{await fn();}catch(e){setError(e instanceof Error?e.message:"Please retry.");}finally{setBusy(false);}}
+  function showLink(code:string){setLink(`${window.location.origin}/join#invite=${code}`);}
+  return <section className="panel"><div className="page-heading"><h2>Friends and family</h2><button disabled={busy} onClick={onClose}>Close sharing</button></div>
+    <p>Add each person and share their private invitation link. Readers open the calendar; co-editors can also edit future stories, illustrations, and traditions. Only you manage access.</p>
+    <p className="fine">Each link works once and expires after seven days. Share it only with its intended recipient: anyone with the link can use it. Email is an optional reminder for you; this form does not send email.</p>
+    {error&&<p className="error" role="alert">{error}</p>}{notice&&<p role="status">{notice}</p>}
+    <form onSubmit={e=>{e.preventDefault();const form=e.currentTarget,data=new FormData(form);void run(async()=>{const result=await api<{code:string}>(`${base}/people`,"POST",{name:data.get("name"),email:data.get("email"),canEdit:data.get("role")==="EDITOR"});showLink(result.code);form.reset();await load();setNotice("Added to your invitation list. Share the private link below.");});}}><fieldset disabled={busy||!loaded}>
+      <div className="form-grid"><label>Friend or family member’s name<input name="name" required maxLength={80}/></label><label>Email (optional)<input name="email" type="email" maxLength={254}/></label></div>
+      <label>Calendar access<select name="role" aria-label="Calendar access" defaultValue="EDITOR"><option value="EDITOR">Co-editor — create together</option><option value="MEMBER">Reader — open and enjoy</option></select></label><button className="primary">Add person and create link</button>
+    </fieldset></form>
+    {link&&<div className="invitation-link"><label>Private invitation link<input readOnly value={link} onFocus={e=>e.target.select()}/></label><button disabled={busy} onClick={()=>void run(async()=>{await navigator.clipboard.writeText(link);setNotice("Invitation link copied.");})}>Copy invitation link</button><p className="fine">For a person using another device, the app needs a reachable hosted address. A localhost link works only on this computer.</p></div>}
+    <h3>Invitation list</h3>{!people.length&&<p>No invitations yet.</p>}<ul className="people-list">{people.map(p=><li key={p.id}><strong>{p.name}</strong>{p.email&&<span> · {p.email}</span>}<p className="fine">{p.status.toLowerCase()} · Invited as {p.canEdit?"co-editor":"reader"}</p>{["PENDING","EXPIRED"].includes(p.status)&&<div className="toolbar"><button disabled={busy} onClick={()=>void run(async()=>{showLink((await api<{code:string}>(`${base}/people/${p.id}/invitation`,"POST")).code);await load();setNotice("New link created. The previous link no longer works.");})}>New link for {p.name}</button><button disabled={busy} onClick={()=>void run(async()=>{await api(`${base}/people/${p.id}`,"DELETE");setLink("");await load();setNotice("Invitation revoked.");})}>Revoke invitation for {p.name}</button></div>}</li>)}</ul>
+    <h3>Joined members</h3><ul className="people-list">{members.map(m=><li key={m.id}><strong>{m.name}</strong> · {m.role==="OWNER"?"Owner":m.role==="EDITOR"?"Co-editor":"Reader"}{m.role!=="OWNER"&&<div className="toolbar"><button disabled={busy} onClick={()=>void run(async()=>{await api(`${base}/members/${m.id}`,"PUT",{canEdit:m.role!=="EDITOR"});await load();setNotice("Calendar access updated.");})}>{m.role==="EDITOR"?"Make reader":"Make co-editor"}: {m.name}</button><button disabled={busy} onClick={()=>{if(window.confirm(`Remove ${m.name}’s access to this calendar?`))void run(async()=>{await api(`${base}/members/${m.id}`,"DELETE");await load();setNotice("Calendar access removed.");});}}>Remove {m.name}</button></div>}</li>)}</ul>
+  </section>;
+}

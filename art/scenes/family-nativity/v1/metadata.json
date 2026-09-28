@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "generator": "built-in image_gen",
+  "casting": {
+    "Mary": "Zoe",
+    "Joseph": "Andrew",
+    "Jesus": "Baby Isaac",
+    "angel": "Christian",
+    "wiseMen": [
+      "Mike",
+      "Mikey",
+      "John"
+    ],
+    "shepherds": [
+      "Lani",
+      "Hannah",
+      "Melissa",
+      "Maddie",
+      "Mia",
+      "Bekah"
+    ]
+  },
+  "animals": [
+    "cow",
+    "donkey",
+    "sheep",
+    "lambs"
+  ],
+  "references": [
+    "art/characters/v3/family-cast-v3.png",
+    "art/characters/v1/mike-christian-turnaround-v1.png"
+  ],
+  "sha256": "addac80b295831adbb0f350f93ae541aa4d245d07a814f3c21fca3664b80f9a5",
+  "publicationStatus": "local draft"
+}

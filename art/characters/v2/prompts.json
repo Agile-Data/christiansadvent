@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "generator": "built-in image_gen",
+  "reference": "../v1/family-cast-v1.png",
+  "prompt": "Use case: identity-preserve. Edit the supplied 12-panel family character sheet. Change ONLY portrait 06 (second row, second column): remove John's straw hat completely and give him natural short brown hair, neatly side-parted. Preserve John's existing face, smile, age, suit, white shirt and blue tie. Keep every other portrait exactly the same, with identical composition, borders, colors, proportions and number labels 01 through 12. Keep the original sheet dimensions/aspect ratio and grid alignment. No names added; names will be rendered as editable website text. White opaque background. Do not change anyone else's hair, face, clothes or pose."
+}

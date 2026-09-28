@@ -1,0 +1,9 @@
+[
+ {"id":"thanksgiving","label":"Family Thanksgiving","file":"art/scenes/family-thanksgiving/v1/family-thanksgiving-v1.png","alt":"Christian and the family gathered for Thanksgiving."},
+ {"id":"tree","label":"Black Friday tree trimming","file":"art/scenes/black-friday-tree/v1/black-friday-tree-v1.png","alt":"The family decorating the Christmas tree together."},
+ {"id":"devotional","label":"Family Christmas devotional","file":"art/scenes/family-christmas-devotional/v1/family-christmas-devotional-v1.png","alt":"Mike, Lani, Christian, and the family watching the Christmas devotional; Andrew holds Baby Isaac."},
+ {"id":"ward-party","label":"Ward Christmas party","file":"art/scenes/ward-christmas-party/v1/ward-christmas-party-v1.png","alt":"Mike, Lani, Maddie, Mia, and Christian at a ward Christmas party."},
+ {"id":"stable","label":"Bekah and Melissa’s Nativity stable","file":"art/scenes/bekah-melissa-nativity/v1/bekah-melissa-gingerbread-stable-v1.png","alt":"Bekah and Melissa assembling a paper gingerbread stable with Nativity figures and animals."},
+ {"id":"nativity","label":"The family Nativity","file":"art/scenes/family-nativity/v1/family-nativity-v1.png","alt":"Zoe as Mary, Andrew as Joseph, Baby Isaac as Jesus, Christian as the angel, and family members as wise men and shepherds."},
+ {"id":"crafting","label":"Making Christmas together","file":"art/characters/v1/advent-crafting-scene-v1.png","alt":"Christian and family making Christmas crafts together."}
+]

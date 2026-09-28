@@ -1,0 +1,13 @@
+.git
+.idea
+node_modules
+.next
+.env*
+*.tsbuildinfo
+test-results
+playwright-report
+tests
+docs
+
+# Original family photos and draft character art stay out of deployments.
+art/

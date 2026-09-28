@@ -1,0 +1,8 @@
+import {test,expect} from '@playwright/test';
+test('settings are separate from calendar display',async({page})=>{
+ await page.route('**/api/v1/profile/preferences',r=>r.fulfill({json:{language:'en'}}));
+ await page.route('**/api/v1/advent/calendars**',r=>{const p=new URL(r.request().url()).pathname;let body:any=[];if(p.endsWith('/calendars'))body=[{id:'one',name:'Our Christmas',year:2026,timezone:'UTC',role:'OWNER',thanksgiving:true}];else if(p.endsWith('/holidays'))body={THANKSGIVING:true,BLACK_FRIDAY:true,BOXING_DAY:false,NEW_YEARS_EVE:false,NEW_YEARS_DAY:false};return r.fulfill({json:body});});
+ await page.goto('/');await expect(page.getByRole('link',{name:'Calendar settings',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Edit doors (includes future days)',exact:true})).toHaveCount(0);await expect(page.getByRole('heading',{name:'Included holidays',exact:true})).toHaveCount(0);
+ await page.getByRole('link',{name:'Calendar settings',exact:true}).click();await expect(page.getByRole('heading',{name:'Calendar settings',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Included holidays',exact:true})).toBeVisible();await expect(page.getByRole('checkbox',{name:'Black Friday',exact:true})).toBeChecked();await expect(page.getByRole('button',{name:'Edit doors (includes future days)',exact:true})).toBeVisible();await expect(page.getByRole('group',{name:'Calendar layout'})).toHaveCount(0);
+ await page.getByRole('link',{name:'New calendar',exact:true}).click();await expect(page.getByRole('heading',{name:'Create your calendar',exact:true})).toBeVisible();await expect(page.getByLabel('Calendar name',{exact:true})).toBeVisible();await expect(page.getByRole('group',{name:'Calendar layout'})).toHaveCount(0);
+});

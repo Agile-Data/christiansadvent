@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "generator": "built-in image_gen",
+  "characters": [
+    "family-01",
+    "family-02",
+    "family-03",
+    "family-04",
+    "family-05",
+    "family-06",
+    "family-07",
+    "family-08",
+    "family-09",
+    "family-10",
+    "family-11",
+    "family-12",
+    "christian"
+  ],
+  "description": "Rear three-quarter view of Mike and Lani on the couch with the family and Christian gathered to watch the First Presidency Christmas Devotional. Andrew holds Baby Isaac.",
+  "references": [
+    "art/characters/v3/family-cast-v3.png",
+    "art/characters/v1/mike-christian-turnaround-v1.png",
+    "art/characters/v1/advent-crafting-scene-v1.png"
+  ],
+  "sha256": "6faaa0f130d16f43a4c283580f0b4180ce2324af47839aad65ed44e909a3dbf0",
+  "publicationStatus": "local draft"
+}
