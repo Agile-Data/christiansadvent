@@ -1,0 +1,75 @@
+name: Deploy Web to AWS
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+  packages: read
+  id-token: write
+concurrency:
+  group: advent-deploy-dev
+  cancel-in-progress: false
+jobs:
+  deploy:
+    name: Deploy reviewed main commit to Dev
+    if: github.ref == 'refs/heads/main'
+    environment: dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      AWS_REGION: us-east-1
+      DEPLOY_ROLE: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+      ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+      ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}
+      ECS_SERVICE: ${{ vars.ECS_SERVICE }}
+      ECS_CONTAINER: ${{ vars.ECS_CONTAINER }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify configuration and successful CI for this commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for key in DEPLOY_ROLE ECR_REPOSITORY ECS_CLUSTER ECS_SERVICE ECS_CONTAINER; do
+            if [ -z "${!key}" ]; then echo "Missing dev environment variable: $key"; exit 1; fi
+          done
+          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$GITHUB_SHA&event=push&status=success" --jq '.workflow_runs | length' | grep -Eq '^[1-9][0-9]*$'
+          node scripts/check-published-dependencies.mjs
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.DEPLOY_ROLE }}
+          aws-region: us-east-1
+          allowed-account-ids: '878021512734'
+      - uses: aws-actions/amazon-ecr-login@v2
+        id: ecr
+      - name: Build and push immutable commit image
+        id: image
+        env:
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          NODE_AUTH_TOKEN: ${{ secrets.AGILE_DATA_PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          IMAGE="$REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA"
+          docker build --secret id=NODE_AUTH_TOKEN,env=NODE_AUTH_TOKEN -t "$IMAGE" .
+          docker push "$IMAGE"
+          DIGEST=$(aws ecr describe-images --repository-name "$ECR_REPOSITORY" --image-ids imageTag="$GITHUB_SHA" --query 'imageDetails[0].imageDigest' --output text)
+          echo "uri=$REGISTRY/$ECR_REPOSITORY@$DIGEST" >> "$GITHUB_OUTPUT"
+      - name: Read existing service task definition
+        run: |
+          set -euo pipefail
+          TASK=$(aws ecs describe-services --cluster "$ECS_CLUSTER" --services "$ECS_SERVICE" --query 'services[0].taskDefinition' --output text)
+          [ "$TASK" != None ] && [ -n "$TASK" ]
+          aws ecs describe-task-definition --task-definition "$TASK" --query taskDefinition > task-definition.json
+      - uses: aws-actions/amazon-ecs-render-task-definition@v1
+        id: task
+        with:
+          task-definition: task-definition.json
+          container-name: ${{ env.ECS_CONTAINER }}
+          image: ${{ steps.image.outputs.uri }}
+      - uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true

@@ -1,7 +1,11 @@
+# syntax=docker/dockerfile:1
 FROM node:24-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN --mount=type=secret,id=NODE_AUTH_TOKEN,required=true \
+    TOKEN="$(cat /run/secrets/NODE_AUTH_TOKEN)" && \
+    printf '@agile-data:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=%s\n' "$TOKEN" > /tmp/advent.npmrc && \
+    NPM_CONFIG_USERCONFIG=/tmp/advent.npmrc npm ci && rm /tmp/advent.npmrc
 COPY . .
 RUN npm run build
 

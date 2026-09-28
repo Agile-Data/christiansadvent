@@ -1,4 +1,5 @@
 "use client";
+import {AdventDoorGrid} from "@agile-data/advent";
 import { FormEvent, useEffect, useState } from "react";
 
 import TraditionPlanner, { ArtworkPicker, type Artwork } from "./TraditionPlanner";
@@ -198,12 +199,10 @@ export default function CalendarApp({mode="calendar"}:{mode?:"calendar"|"new"|"s
       ...doors.map(d=>({...d,key:`day-${d.number}`,label:d.number===0?"Thanksgiving":d.number===24?"Christmas Eve":d.number===25?"Christmas Day":"",open:()=>{void open(d.number);}})),
       ...traditions.filter(t=>t.date).map((t,i)=>({...t,key:`tradition-${t.id}`,label:({BLACK_FRIDAY:"Black Friday",BOXING_DAY:"Boxing Day",NEW_YEARS_EVE:"New Year’s Eve",NEW_YEARS_DAY:"New Year’s Day"} as Record<string,string>)[t.holidayKey||""]||`Gathering ${i+1}`,open:()=>navigate(selected,`tradition-${t.id}`)}))
     ]}/>:<>
-    <div className="doors" aria-label="Advent doors">{[
+    <AdventDoorGrid busy={busy} language={language} entries={[
       ...doors.map(d=>({...d,key:`day-${d.number}`,label:d.number===0?"Thanksgiving":d.number===24?"Christmas Eve":d.number===25?"Christmas Day":"",open:()=>open(d.number)})),
       ...traditions.filter(t=>t.holidayKey).map(t=>({...t,number:Number(t.date.slice(-2)),key:`tradition-${t.id}`,label:({BLACK_FRIDAY:"Black Friday",BOXING_DAY:"Boxing Day",NEW_YEARS_EVE:"New Year’s Eve",NEW_YEARS_DAY:"New Year’s Day"} as Record<string,string>)[t.holidayKey||""]||"Holiday",open:async()=>{navigate(selected,`tradition-${t.id}`);}}))
-    ].sort((a,b)=>a.date.localeCompare(b.date)).map(door=><button key={door.key} className={`door ${door.opened?"opened":""} ${door.label?"holiday":""}`} disabled={busy||door.state!=="AVAILABLE"} aria-label={`${dateLabel(door.date)}${door.label?`: ${door.label}`:""}: ${door.state==="LOCKED"?"not yet open":door.state==="DRAFT"?"not ready":door.opened?"read again":"open door"}`} onClick={()=>void door.open()}>
-      <small>{door.date.slice(5,7)==="11"?"NOVEMBER":door.date.slice(5,7)==="01"?"JANUARY":"DECEMBER"}</small><strong>{Number(door.date.slice(-2))}</strong>{door.label&&<b className="holiday-label">{door.label}</b>}<span>{door.state==="LOCKED"?"Not yet":door.state==="DRAFT"?"Not ready":door.opened?"Read again":"Open door"}</span>
-    </button>)}</div>
+    ]}/>
     {traditions.some(t=>!t.holidayKey) && <section className="panel"><h2>Gatherings and family traditions</h2><p>Open each gathering on its date. Your host can set or adjust dates in the tradition planner.</p><div className="toolbar">{traditions.filter(t=>!t.holidayKey).sort((a,b)=>(a.date||"9999").localeCompare(b.date||"9999")).map((t,i) => <button key={t.id} disabled={busy || t.state !== "AVAILABLE"} onClick={() => navigate(selected,`tradition-${t.id}`)}>{t.date ? dateLabel(t.date) : "Date to be chosen"} · {t.state === "AVAILABLE" ? "Open tradition" : t.state === "UNSCHEDULED" ? "Not scheduled" : t.state === "DRAFT" ? "Not ready" : "Not yet"} {i+1}</button>)}</div></section>}
     </>}
     {calendarView&&traditions.some(t=>!t.date)&&<p className="fine">Some gatherings still need dates. Set them in Calendar settings → Plan traditions to place them on the calendar.</p>}
