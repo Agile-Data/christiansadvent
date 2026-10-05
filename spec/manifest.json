@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "repository": "christiansadvent",
+  "solution": "Familiator",
+  "status": "draft",
+  "documents": {
+    "foundations": [
+      "spec/foundations.md",
+      "AGENTS.md"
+    ],
+    "product": [
+      "README.md"
+    ],
+    "architecture": [
+      "docs/architecture.md"
+    ],
+    "requirements": [
+      "spec/requirements.md"
+    ]
+  },
+  "requirements": [
+    {
+      "id": "CHRISTIANSADVENT-001",
+      "statement": "A standalone Advent user may create or join a calendar without creating a Familiator household.",
+      "source": "spec/requirements.md#christiansadvent-001",
+      "verification": [
+        {
+          "path": "spec/verification.md",
+          "kind": "manual",
+          "description": "Sign in as a new identity, create/join an Advent calendar, and verify no household or household membership was implicitly created."
+        }
+      ]
+    },
+    {
+      "id": "CHRISTIANSADVENT-002",
+      "statement": "Reader access is calendar-authorized and server-date-gated; future door text is not downloaded to the reader.",
+      "source": "spec/requirements.md#christiansadvent-002",
+      "verification": [
+        {
+          "path": "spec/verification.md",
+          "kind": "test",
+          "description": "Use member/nonmember identities and calendar-timezone boundary cases; verify locked/future content is absent from serialized reader responses."
+        }
+      ]
+    },
+    {
+      "id": "CHRISTIANSADVENT-003",
+      "statement": "The Advent frontend retains a separate first-party session with server-only API tokens while using the matching Familiator identity directory and audience.",
+      "source": "spec/requirements.md#christiansadvent-003",
+      "verification": [
+        {
+          "path": "spec/verification.md",
+          "kind": "review",
+          "description": "Inspect lane Auth0/API configuration and BFF routes; verify no cross-domain cookie sharing, email-based account auto-linking, or browser API tokens."
+        }
+      ]
+    }
+  ]
+}
