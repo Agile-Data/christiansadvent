@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@agile-data/advent": "0.1.4-rc.1",
-    "@auth0/nextjs-auth0": "4.29.0",
+    "@auth0/nextjs-auth0": "4.31.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.4.0",
